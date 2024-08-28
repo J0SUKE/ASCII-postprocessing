@@ -113,7 +113,7 @@ export default class Canvas {
     this.scene.add(directionalLight)
 
     const helper = new THREE.DirectionalLightHelper(directionalLight, 1)
-    this.scene.add(helper)
+    //this.scene.add(helper)
   }
 
   createModel() {
