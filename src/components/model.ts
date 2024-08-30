@@ -35,8 +35,6 @@ export default class Model {
           value: 0,
         },
       },
-      //flatShading: true,
-      //color: 0xff00ff,
     })
   }
 

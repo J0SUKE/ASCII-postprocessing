@@ -21,6 +21,7 @@ export default class Canvas {
   debug: GUI
   model: Model
   composer: EffectComposer
+  asciiPass: AsciiEffect
 
   constructor() {
     this.element = document.getElementById('webgl') as HTMLCanvasElement
@@ -45,7 +46,9 @@ export default class Canvas {
   createCamera() {
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100)
     this.scene.add(this.camera)
-    this.camera.position.z = 10
+    this.camera.position.z = 6
+    this.camera.position.x = -2
+    this.camera.position.y = 1
   }
 
   createOrbitControls() {
@@ -71,8 +74,8 @@ export default class Canvas {
     const renderPass = new RenderPass(this.scene, this.camera)
     this.composer.addPass(renderPass)
 
-    const customPass = new AsciiEffect()
-    this.composer.addPass(customPass.asciiPass)
+    this.asciiPass = new AsciiEffect()
+    this.composer.addPass(this.asciiPass.asciiPass)
 
     const outputPass = new OutputPass()
     this.composer.addPass(outputPass)
@@ -80,6 +83,21 @@ export default class Canvas {
 
   createDebug() {
     this.debug = new GUI()
+
+    const obj = {
+      bool: true,
+    }
+
+    this.debug
+      .add(obj, 'bool')
+      .onChange((val: boolean) => {
+        if (val) {
+          this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 1
+        } else {
+          this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 0
+        }
+      })
+      .name('ASCII')
   }
 
   createClock() {
@@ -105,7 +123,7 @@ export default class Canvas {
   }
 
   createLight() {
-    const directionalLight = new THREE.DirectionalLight('white', 0.5)
+    const directionalLight = new THREE.DirectionalLight('white', 1)
     directionalLight.position.x = 10
     directionalLight.position.z = 10
     directionalLight.position.y = 5
@@ -114,6 +132,10 @@ export default class Canvas {
 
     const helper = new THREE.DirectionalLightHelper(directionalLight, 1)
     //this.scene.add(helper)
+
+    // const light = new THREE.PointLight('white', 2, 5)
+    // light.position.set(2, 1, 2)
+    // this.scene.add(light)
   }
 
   createModel() {
