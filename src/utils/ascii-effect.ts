@@ -1,6 +1,7 @@
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js'
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import asciiFragment from '../../src/shaders/ascii/ascii.glsl'
+import * as THREE from 'three'
 
 export default class AsciiEffect {
   composer: EffectComposer
@@ -16,6 +17,12 @@ export default class AsciiEffect {
     this.createShader()
 
     this.asciiPass = new ShaderPass(this.shader)
+
+    window.addEventListener('resize', this.onResize.bind(this))
+  }
+
+  onResize() {
+    this.shader.uniforms.uResolution.value = new THREE.Vector2(window.innerWidth, window.innerHeight)
   }
 
   createShader() {
@@ -24,6 +31,9 @@ export default class AsciiEffect {
 
       uniforms: {
         tDiffuse: { value: null },
+        uResolution: {
+          value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+        },
         opacity: { value: 1.0 },
       },
 
