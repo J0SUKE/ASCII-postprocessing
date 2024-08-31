@@ -1,11 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 
-import vertexShader from '../shaders/vertex.glsl'
-import fragmentShader from '../shaders/fragment.glsl'
-
-import CustomShaderMaterial from 'three-custom-shader-material/vanilla'
-
 interface Props {
   scene: THREE.Scene
 }
@@ -14,7 +9,8 @@ export default class Model {
   loader: GLTFLoader
   scene: THREE.Scene
   model: null | THREE.Group<THREE.Object3DEventMap>
-  material: CustomShaderMaterial
+  //material: CustomShaderMaterial
+  material: THREE.MeshStandardMaterial
 
   constructor({ scene }: Props) {
     this.scene = scene
@@ -25,16 +21,8 @@ export default class Model {
   }
 
   createMaterial() {
-    this.material = new CustomShaderMaterial({
-      baseMaterial: THREE.MeshStandardMaterial,
-      vertexShader,
-      fragmentShader,
-      silent: true, // Disables the default warning if true
-      uniforms: {
-        uTime: {
-          value: 0,
-        },
-      },
+    this.material = new THREE.MeshStandardMaterial({
+      color: 'white',
     })
   }
 
@@ -42,10 +30,12 @@ export default class Model {
     this.loader.load(
       // resource URL
       '/LeePerrySmith/LeePerrySmith.glb',
-      // called when the resource is loaded
+      //'/david_head/scene.gltf',
       (gltf) => {
         console.log(gltf)
         this.model = gltf.scene
+        //this.model.scale.set(0.05, 0.05, 0.05)
+        //this.model.position.y -= 5
         const mesh = this.model.children[0] as THREE.Mesh
         mesh.material = this.material
         this.scene.add(this.model)
@@ -55,7 +45,7 @@ export default class Model {
 
   render(time: number) {
     if (this.model) {
-      this.model.rotation.y = time * 0.3
+      //this.model.rotation.y = time * 0.3
     }
   }
 }

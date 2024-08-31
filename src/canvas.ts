@@ -22,6 +22,7 @@ export default class Canvas {
   model: Model
   composer: EffectComposer
   asciiPass: AsciiEffect
+  directionalLight: THREE.DirectionalLight
 
   constructor() {
     this.element = document.getElementById('webgl') as HTMLCanvasElement
@@ -97,7 +98,22 @@ export default class Canvas {
           this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 0
         }
       })
+      .listen()
       .name('ASCII')
+
+    window.addEventListener('keypress', (e) => {
+      if (e.key === 's') {
+        if (obj.bool) {
+          obj.bool = false
+          this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 0
+        } else {
+          obj.bool = true
+          this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 1
+        }
+      }
+    })
+
+    this.debug.add(this.directionalLight, 'intensity').min(1).max(10).step(0.1).name('Light intensity')
   }
 
   createClock() {
@@ -123,19 +139,12 @@ export default class Canvas {
   }
 
   createLight() {
-    const directionalLight = new THREE.DirectionalLight('white', 1)
-    directionalLight.position.x = 10
-    directionalLight.position.z = 10
-    directionalLight.position.y = 5
+    this.directionalLight = new THREE.DirectionalLight('white', 1)
+    this.directionalLight.position.x = 10
+    this.directionalLight.position.z = 10
+    this.directionalLight.position.y = 5
 
-    this.scene.add(directionalLight)
-
-    const helper = new THREE.DirectionalLightHelper(directionalLight, 1)
-    //this.scene.add(helper)
-
-    // const light = new THREE.PointLight('white', 2, 5)
-    // light.position.set(2, 1, 2)
-    // this.scene.add(light)
+    this.scene.add(this.directionalLight)
   }
 
   createModel() {

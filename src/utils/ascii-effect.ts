@@ -17,8 +17,14 @@ export default class AsciiEffect {
   characters: string
 
   constructor() {
-    //this.characters = ' .ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@$#'
-    this.characters = '@#BW86&9RQE0D2GZeKPS3X4U%IJTicj?lv+|r/_!^~:,-. '.split('').reverse().join('')
+    //provide a power of 2 number of characters
+    //8
+    //16
+    //32
+    //64
+
+    //this.characters = " .`-,:;'_~^=+<>i!lI?/|()1{}[]rcvuxzjftnLYJCVoZUwXhkmOa*#MW&8%B@$" //64
+    this.characters = " .-:'~=<il?|){[rxjtLJVZwhma#W8%@" //32
 
     this.createShader()
 
@@ -26,13 +32,12 @@ export default class AsciiEffect {
 
     window.addEventListener('resize', this.onResize.bind(this))
 
-    document.fonts.ready.then(() => {
-      this.createCanvas()
-    })
+    this.createCanvas()
   }
 
   onResize() {
     this.asciiPass.material.uniforms.uResolution.value = new THREE.Vector2(window.innerWidth, window.innerHeight)
+    this.asciiPass.material.uniforms.uSize.value = Math.floor(Math.min(window.innerHeight, window.innerWidth) / 9)
   }
 
   createShader() {
@@ -47,11 +52,20 @@ export default class AsciiEffect {
         uTexture: {
           value: new THREE.Vector4(),
         },
+        // uTexture: {
+        //   value: new THREE.TextureLoader().load('/chars.png', (texture) => {
+        //     texture.magFilter = THREE.NearestFilter
+        //     //texture.minFilter = THREE.NearestFilter
+        //     texture.minFilter = THREE.LinearFilter
+        //     this.asciiPass.material.uniforms.uTexture.value = texture
+        //   }),
+        // },
         uTextureResolution: {
-          value: new THREE.Vector2(this.characters.length * 20, 20),
+          value: new THREE.Vector2(this.characters.length * 128, 128),
         },
         opacity: { value: 1.0 },
         uShowAscii: { value: 1 },
+        uSize: { value: Math.floor(Math.min(window.innerHeight, window.innerWidth) / 9) },
       },
 
       vertexShader: /* glsl */ `
@@ -88,7 +102,7 @@ export default class AsciiEffect {
     this.ctx.fillStyle = 'black'
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
 
-    this.ctx.font = '16px monospace' // Adjust size if needed
+    this.ctx.font = '92px monospace' // Adjust size if needed
     this.ctx.textAlign = 'center'
     this.ctx.textBaseline = 'middle'
     this.ctx.fillStyle = 'white'
@@ -103,7 +117,9 @@ export default class AsciiEffect {
 
     const texture = new THREE.CanvasTexture(this.canvas)
     texture.magFilter = THREE.NearestFilter
-    texture.minFilter = THREE.NearestFilter
+    //texture.minFilter = THREE.NearestFilter
+    texture.minFilter = THREE.LinearFilter
+    //texture.generateMipmaps = false
 
     this.asciiPass.material.uniforms.uTexture.value = texture
   }
