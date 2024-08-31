@@ -52,14 +52,6 @@ export default class AsciiEffect {
         uTexture: {
           value: new THREE.Vector4(),
         },
-        // uTexture: {
-        //   value: new THREE.TextureLoader().load('/chars.png', (texture) => {
-        //     texture.magFilter = THREE.NearestFilter
-        //     //texture.minFilter = THREE.NearestFilter
-        //     texture.minFilter = THREE.LinearFilter
-        //     this.asciiPass.material.uniforms.uTexture.value = texture
-        //   }),
-        // },
         uTextureResolution: {
           value: new THREE.Vector2(this.characters.length * 128, 128),
         },
@@ -117,9 +109,7 @@ export default class AsciiEffect {
 
     const texture = new THREE.CanvasTexture(this.canvas)
     texture.magFilter = THREE.NearestFilter
-    //texture.minFilter = THREE.NearestFilter
     texture.minFilter = THREE.LinearFilter
-    //texture.generateMipmaps = false
 
     this.asciiPass.material.uniforms.uTexture.value = texture
   }

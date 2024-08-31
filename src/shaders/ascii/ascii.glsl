@@ -48,10 +48,6 @@ void main() {
 
 
 
-    vec3 final = vec3(texel.r);
-    //gl_FragColor = char;
     gl_FragColor = (1.-step(0.5,uShowAscii))*baseTexel + (step(0.5,uShowAscii))*char;
-
-    //gl_FragColor=vec4(vec3(random(sceneUvs)),1.);
 
 }

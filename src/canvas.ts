@@ -34,9 +34,9 @@ export default class Canvas {
     this.createOrbitControls()
     this.addEventListeners()
     this.createLight()
-    this.createDebug()
     this.createModel()
     this.createPostProcessing()
+    this.createDebug()
     this.render()
   }
 
@@ -100,18 +100,6 @@ export default class Canvas {
       })
       .listen()
       .name('ASCII')
-
-    window.addEventListener('keypress', (e) => {
-      if (e.key === 's') {
-        if (obj.bool) {
-          obj.bool = false
-          this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 0
-        } else {
-          obj.bool = true
-          this.asciiPass.asciiPass.material.uniforms.uShowAscii.value = 1
-        }
-      }
-    })
 
     this.debug.add(this.directionalLight, 'intensity').min(1).max(10).step(0.1).name('Light intensity')
   }
